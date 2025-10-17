@@ -4,7 +4,7 @@ Este directorio contiene ejercicios prácticos para aprender a trabajar con el *
 
 ## ✨ Características Destacadas
 
-- 🚀 **Súper Simples**: Cada ejercicio tiene solo 20 líneas de código
+- 🚀 **Súper Sencillos**: Cada ejercicio tiene solo 20 líneas de código
 - 📦 **Una Sola Dependencia**: Solo necesitas FastMCP
 - 🎯 **Perfecto para Principiantes**: Sin complejidades innecesarias
 - 📚 **Documentación Completa**: Explicaciones línea por línea
