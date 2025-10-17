@@ -1,0 +1,14 @@
+# Dependencias para el Cliente MCP Simple
+# ========================================
+
+# FastMCP - Framework principal para trabajar con MCP
+fastmcp>=0.1.0
+
+# Dependencias adicionales para funcionalidad básica
+asyncio-mqtt>=0.13.0  # Para manejo de mensajes asíncronos
+pydantic>=2.0.0       # Para validación de datos
+aiohttp>=3.8.0        # Para comunicación HTTP asíncrona
+
+# Dependencias de desarrollo (opcional)
+pytest>=7.0.0         # Para testing
+pytest-asyncio>=0.21.0 # Para testing asíncrono
