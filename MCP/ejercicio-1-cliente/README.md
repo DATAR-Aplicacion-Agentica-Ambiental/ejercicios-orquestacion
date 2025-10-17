@@ -1,4 +1,4 @@
-# Ejercicio 1: Cliente MCP Simple
+# Ejercicio 1: Cliente MCP Sencillo
 
 Este ejercicio te enseña cómo crear un **cliente MCP básico** que se conecta a un servidor y realiza peticiones simples. Es el punto de partida perfecto para entender cómo funciona el protocolo MCP desde la perspectiva del consumidor.
 
