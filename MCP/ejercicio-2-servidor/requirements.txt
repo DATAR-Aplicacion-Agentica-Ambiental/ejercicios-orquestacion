@@ -1,15 +1,5 @@
-# Dependencias para el Servidor MCP Simple
-# =========================================
+# Dependencias mínimas para el Servidor MCP Básico
+# ================================================
 
-# FastMCP - Framework principal para crear servidores MCP
+# FastMCP - Framework principal (única dependencia necesaria)
 fastmcp>=0.1.0
-
-# Dependencias adicionales para funcionalidad del servidor
-uvicorn>=0.24.0        # Servidor ASGI para FastMCP
-pydantic>=2.0.0        # Para validación de datos y modelos
-python-multipart>=0.0.6 # Para manejo de formularios multipart
-
-# Dependencias de desarrollo (opcional)
-pytest>=7.0.0          # Para testing
-pytest-asyncio>=0.21.0 # Para testing asíncrono
-httpx>=0.25.0          # Cliente HTTP para testing

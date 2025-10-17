@@ -1,6 +1,6 @@
-# Ejercicio 1: Cliente MCP Sencillo
+# Ejercicio 1: Cliente MCP Básico
 
-Este ejercicio te enseña cómo crear un **cliente MCP básico** que se conecta a un servidor y realiza peticiones simples. Es el punto de partida perfecto para entender cómo funciona el protocolo MCP desde la perspectiva del consumidor.
+Este es el **ejercicio MÁS SIMPLE** posible para crear un cliente MCP. Si nunca has trabajado con MCP, ¡este es el lugar perfecto para empezar!
 
 ## ¿Qué es un Cliente MCP?
 
@@ -11,34 +11,20 @@ Un **cliente MCP** es una aplicación que se conecta a servidores MCP para acced
 - 📋 **Descubrir** herramientas y recursos disponibles
 - 🔧 **Ejecutar** herramientas remotas
 - 📊 **Procesar** respuestas del servidor
-- ❌ **Manejar** errores de comunicación
 
-## Estructura del Código
-
-El archivo `cliente_mcp.py` contiene una clase `ClienteMCPSimple` que demuestra todos estos conceptos:
-
-```python
-class ClienteMCPSimple:
-    def __init__(self, servidor_url)      # Inicialización
-    async def conectar(self)              # Establecer conexión
-    async def listar_herramientas(self)   # Descubrir herramientas
-    async def ejecutar_herramienta(self)  # Ejecutar herramientas
-    async def desconectar(self)           # Cerrar conexión
-```
-
-## Cómo Ejecutar el Ejercicio
+## 🚀 Cómo Ejecutar
 
 ### 1. Preparar el entorno
 
 ```bash
-# Asegúrate de estar en el directorio del ejercicio
+# Navegar al directorio del ejercicio
 cd ejercicio-1-cliente
 
 # Crear entorno virtual (si no existe)
 python3 -m venv venv
 source venv/bin/activate  # En Windows: venv\Scripts\activate
 
-# Instalar dependencias
+# Instalar dependencias (solo FastMCP)
 pip install -r requirements.txt
 ```
 
@@ -51,193 +37,203 @@ python cliente_mcp.py
 ### 3. Salida esperada
 
 ```
-🚀 Iniciando demostración del Cliente MCP Simple
-==================================================
+🚀 Probando cliente MCP básico
+========================================
 
-1️⃣ Conectando al servidor MCP...
-✅ Conexión establecida exitosamente
+📋 Herramientas disponibles en el servidor:
+   • suma(a, b) - Suma dos números
+   • multiplicacion(a, b) - Multiplica dos números
+   • saludo(nombre) - Saludo personalizado
 
-2️⃣ Obteniendo herramientas disponibles...
-📋 Herramientas encontradas: 2
-   • sumar: Suma dos números enteros
-   • multiplicar: Multiplica dos números enteros
+🔧 Probando herramientas:
 
-3️⃣ Ejecutando herramientas...
+   1️⃣ Probando suma: 5 + 3
+      📊 Resultado: 8
 
-   🔧 Ejecutando suma: 15 + 27
-   📊 Resultado: El resultado de 15 + 27 = 42
+   2️⃣ Probando multiplicación: 4 × 7
+      📊 Resultado: 28
 
-   🔧 Ejecutando multiplicación: 8 × 7
-   📊 Resultado: El resultado de 8 × 7 = 56
+   3️⃣ Probando saludo:
+      📊 Resultado: ¡Hola Juan! Bienvenido al servidor MCP.
 
-   🔧 Intentando ejecutar herramienta inexistente...
-   ❌ Como era de esperar, la herramienta no existe
+✅ Pruebas completadas exitosamente!
 
-✅ Demostración completada exitosamente!
-
-🔌 Cliente desconectado
+💡 Para probar con un servidor real:
+   1. Ejecuta el servidor: cd ejercicio-2-servidor && python servidor_basico.py
+   2. En otra terminal, ejecuta este cliente
+   3. El cliente se conectará al servidor y podrá usar las herramientas
 ```
 
-## Explicación Línea por Línea
+## 📖 Explicación del Código
 
-### Importaciones y Configuración
+El código es **extremadamente simple**:
+
+### Importación y Creación del Cliente
 
 ```python
-import asyncio
-import json
-import logging
-from typing import Dict, Any, Optional
 from fastmcp import FastMCP
-```
 
-- `asyncio`: Para programación asíncrona (operaciones no bloqueantes)
-- `json`: Para manejar datos en formato JSON (estándar MCP)
-- `logging`: Para registrar información durante la ejecución
-- `typing`: Para especificar tipos de datos (mejores prácticas)
-- `fastmcp`: Framework que simplifica el trabajo con MCP
-
-### Clase ClienteMCPSimple
-
-```python
-def __init__(self, servidor_url: str = "http://localhost:8000"):
-    self.servidor_url = servidor_url
-    self.cliente = None
-    self.conectado = False
-```
-
-**Línea por línea:**
-- `servidor_url`: URL del servidor MCP (por defecto localhost:8000)
-- `self.cliente`: Instancia de FastMCP (se inicializa en `conectar()`)
-- `self.conectado`: Bandera para saber si hay conexión activa
-
-### Método de Conexión
-
-```python
-async def conectar(self) -> bool:
-    try:
-        self.cliente = FastMCP()
-        await asyncio.sleep(0.1)  # Simular tiempo de conexión
-        self.conectado = True
-        return True
-    except Exception as e:
-        logger.error(f"❌ Error al conectar: {e}")
-        return False
+cliente = FastMCP(name="My First MCP Client")
 ```
 
 **Explicación:**
-- `async`: Indica que es una función asíncrona (no bloquea)
-- `FastMCP()`: Crea la instancia del cliente MCP
-- `await asyncio.sleep(0.1)`: Simula tiempo de conexión (en realidad, aquí harías la conexión real)
-- `self.conectado = True`: Marca la conexión como exitosa
+- `FastMCP`: La clase principal para crear clientes MCP
+- `name`: Nombre descriptivo del cliente (opcional pero recomendado)
 
-### Listar Herramientas
+### Función de Prueba
 
 ```python
-async def listar_herramientas(self) -> Optional[Dict[str, Any]]:
-    if not self.conectado:
-        logger.error("No hay conexión activa con el servidor")
-        return None
+def probar_herramientas():
+    """Prueba las herramientas del servidor MCP de manera simple."""
     
-    # Simular respuesta del servidor
-    herramientas_simuladas = {
-        "tools": [
-            {
-                "name": "sumar",
-                "description": "Suma dos números enteros",
-                "inputSchema": {...}
-            }
-        ]
-    }
-    return herramientas_simuladas
-```
-
-**Conceptos importantes:**
-- Verificación de conexión antes de hacer peticiones
-- Estructura de respuesta estándar MCP
-- `inputSchema`: Define qué parámetros necesita la herramienta
-
-### Ejecutar Herramienta
-
-```python
-async def ejecutar_herramienta(self, nombre: str, parametros: Dict[str, Any]):
-    if nombre == "sumar":
-        a = parametros.get("a", 0)
-        b = parametros.get("b", 0)
-        resultado = a + b
-        return {
-            "content": [
-                {
-                    "type": "text",
-                    "text": f"El resultado de {a} + {b} = {resultado}"
-                }
-            ]
-        }
+    print("🚀 Probando cliente MCP básico")
+    print("=" * 40)
+    
+    # Simular llamadas a herramientas del servidor
+    print("\n   1️⃣ Probando suma: 5 + 3")
+    resultado_suma = 5 + 3  # En realidad sería: cliente.call_tool("suma", {"a": 5, "b": 3})
+    print(f"      📊 Resultado: {resultado_suma}")
 ```
 
 **Explicación:**
-- `parametros.get("a", 0)`: Obtiene el parámetro "a" o usa 0 como defecto
-- Estructura de respuesta estándar con `content` y `type: "text"`
-- Manejo de diferentes tipos de herramientas
+- Función simple que simula llamadas a herramientas
+- Comentarios muestran cómo sería la llamada real
+- Salida clara y organizada
 
-## Conceptos Clave Aprendidos
+### Ejecución Principal
 
-### 1. **Programación Asíncrona**
-- `async/await`: Permite operaciones no bloqueantes
-- Importante para aplicaciones que hacen múltiples peticiones
+```python
+if __name__ == "__main__":
+    probar_herramientas()
+```
 
-### 2. **Protocolo MCP**
-- Estructura estándar de mensajes JSON
-- Manejo de herramientas, recursos y prompts
-- Validación de parámetros
+**Explicación:**
+- `if __name__ == "__main__":` - Solo ejecuta si el archivo se llama directamente
+- `probar_herramientas()` - Ejecuta la función de demostración
 
-### 3. **Manejo de Errores**
-- Verificación de conexión antes de operaciones
-- Try/catch para manejar excepciones
-- Logging para debugging
+## 🧪 Cómo Probar con un Servidor Real
 
-### 4. **Arquitectura Cliente-Servidor**
-- Separación clara de responsabilidades
-- Cliente consume, servidor proporciona
-- Comunicación a través de protocolo estándar
+### Opción 1: Usar el Servidor del Ejercicio 2
 
-## Troubleshooting Común
+1. **Terminal 1** - Ejecutar el servidor:
+   ```bash
+   cd ejercicio-2-servidor
+   python servidor_basico.py
+   ```
+
+2. **Terminal 2** - Ejecutar este cliente:
+   ```bash
+   cd ejercicio-1-cliente
+   python cliente_mcp.py
+   ```
+
+### Opción 2: Modificar el Cliente para Conexión Real
+
+Puedes modificar `cliente_mcp.py` para conectarte a un servidor real:
+
+```python
+# Reemplazar las simulaciones con llamadas reales:
+resultado_suma = cliente.call_tool("suma", {"a": 5, "b": 3})
+resultado_mult = cliente.call_tool("multiplicacion", {"a": 4, "b": 7})
+saludo = cliente.call_tool("saludo", {"nombre": "Juan"})
+```
+
+## 🎯 Conceptos Clave Aprendidos
+
+### 1. **Simplicidad de FastMCP**
+- Solo necesitas `FastMCP` para crear un cliente
+- No necesitas configurar protocolos complejos
+- FastMCP maneja la comunicación automáticamente
+
+### 2. **Estructura de Cliente MCP**
+- Crear instancia del cliente
+- Llamar herramientas con parámetros
+- Procesar respuestas del servidor
+
+### 3. **Flujo Cliente-Servidor**
+- Cliente solicita herramientas del servidor
+- Servidor ejecuta las herramientas
+- Cliente recibe y procesa los resultados
+
+### 4. **Tipos de Datos**
+- Parámetros de entrada (números, strings)
+- Respuestas del servidor (resultados de herramientas)
+- Manejo de errores básico
+
+## 🔧 Personalización Fácil
+
+### Agregar Nueva Prueba
+
+```python
+print("\n   4️⃣ Probando nueva herramienta:")
+resultado = cliente.call_tool("nueva_herramienta", {"param": "valor"})
+print(f"      📊 Resultado: {resultado}")
+```
+
+### Probar con Diferentes Parámetros
+
+```python
+# Probar con diferentes números
+print("\n   🔢 Probando con diferentes números:")
+for a in [1, 2, 3]:
+    for b in [10, 20, 30]:
+        resultado = cliente.call_tool("suma", {"a": a, "b": b})
+        print(f"      {a} + {b} = {resultado}")
+```
+
+### Agregar Manejo de Errores
+
+```python
+try:
+    resultado = cliente.call_tool("herramienta_inexistente", {"a": 1})
+    print(f"Resultado: {resultado}")
+except Exception as e:
+    print(f"Error: {e}")
+```
+
+## 🚨 Troubleshooting
 
 ### Error: "ModuleNotFoundError: No module named 'fastmcp'"
 
 **Solución:**
 ```bash
 pip install fastmcp
-# o
-pip install -r requirements.txt
 ```
 
-### Error: "No hay conexión activa con el servidor"
+### Error: "No se puede conectar al servidor"
 
-**Causa:** El método `conectar()` no se ejecutó correctamente.
+**Causa:** El servidor no está ejecutándose.
 
-**Solución:** Verifica que el servidor esté ejecutándose y la URL sea correcta.
+**Solución:**
+1. Verifica que el servidor esté corriendo
+2. Verifica que no haya errores en la consola del servidor
+3. Asegúrate de que el puerto no esté ocupado
 
-### Error: "Herramienta 'X' no encontrada"
+### Error: "Tool not found"
 
-**Causa:** Intentaste ejecutar una herramienta que no existe en el servidor.
+**Causa:** La herramienta no existe en el servidor.
 
-**Solución:** Usa `listar_herramientas()` para ver qué herramientas están disponibles.
+**Solución:** 
+- Verifica que el servidor tenga la herramienta disponible
+- Usa el nombre exacto de la herramienta
+- Revisa los parámetros requeridos
 
-## Próximos Pasos
+## 🎓 Próximos Pasos
 
-Ahora que entiendes cómo funciona un cliente MCP:
+Después de dominar este ejercicio básico:
 
 1. **Ejecuta el Ejercicio 2** para aprender a crear un servidor MCP
-2. **Experimenta** modificando los parámetros de las herramientas
-3. **Intenta** conectarte a un servidor MCP real
+2. **Experimenta** conectando este cliente al servidor
+3. **Modifica** el código para agregar nuevas funcionalidades
 4. **Explora** la documentación oficial de FastMCP
 
-## Referencias
+## 💡 Consejos
 
-- [Documentación FastMCP](https://github.com/jlowin/fastmcp)
-- [Protocolo MCP](https://modelcontextprotocol.io/)
-- [Python Asyncio](https://docs.python.org/3/library/asyncio.html)
+- **Empieza simple**: Usa las herramientas básicas primero
+- **Experimenta**: Prueba con diferentes parámetros
+- **Lee los errores**: Los mensajes de error te ayudan a debuggear
+- **Conecta servidor y cliente**: Para ver la comunicación real
 
 ---
 
-¡Felicitaciones! Has completado el Ejercicio 1. 🎉
+¡Este es el punto de partida perfecto para aprender MCP! 🎉

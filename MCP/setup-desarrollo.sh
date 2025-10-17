@@ -45,9 +45,9 @@ cd ejercicio-1-cliente
 pip install -r requirements.txt
 cd ..
 
-# Configurar entorno para ejercicio 2 (Servidor)
+# Configurar entorno para ejercicio 2 (Servidor Básico)
 echo ""
-echo "🔧 Configurando ejercicio 2 (Servidor)..."
+echo "🚀 Configurando ejercicio 2 (Servidor Básico)..."
 cd ejercicio-2-servidor
 pip install -r requirements.txt
 cd ..
@@ -58,7 +58,7 @@ echo ""
 echo "📋 Próximos pasos:"
 echo "1. Para activar el entorno: source venv/bin/activate"
 echo "2. Ejecutar ejercicio 1: cd ejercicio-1-cliente && python cliente_mcp.py"
-echo "3. Ejecutar ejercicio 2: cd ejercicio-2-servidor && python servidor_mcp.py"
+echo "3. Ejecutar ejercicio 2 (más simple): cd ejercicio-2-servidor && python servidor_basico.py"
 echo ""
 echo "💡 Tip: Siempre activa el entorno virtual antes de trabajar"
 echo "   source venv/bin/activate"

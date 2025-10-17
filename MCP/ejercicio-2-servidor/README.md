@@ -1,316 +1,210 @@
-# Ejercicio 2: Servidor MCP Simple
+# Ejercicio 2: Servidor MCP Básico
 
-Este ejercicio te enseña cómo crear un **servidor MCP básico** que expone herramientas simples usando FastMCP. Es el complemento perfecto al Ejercicio 1 y te muestra cómo funciona el protocolo MCP desde la perspectiva del proveedor.
+Este es el **ejercicio MÁS SIMPLE** posible para crear un servidor MCP. Si nunca has trabajado con MCP, ¡este es el lugar perfecto para empezar!
 
-## ¿Qué es un Servidor MCP?
+## ¿Qué hace este ejercicio?
 
-Un **servidor MCP** es una aplicación que expone herramientas, recursos y capacidades a través del protocolo MCP. Piensa en él como un "proveedor" que ofrece servicios a "consumidores" (clientes MCP).
+Este servidor MCP expone **3 herramientas básicas**:
+- 🧮 **`suma(a, b)`** - Suma dos números
+- ✖️ **`multiplicacion(a, b)`** - Multiplica dos números  
+- 👋 **`saludo(nombre)`** - Devuelve un saludo personalizado
 
-### Funciones principales de un servidor:
-- 🔧 **Exponer** herramientas (funciones que pueden ejecutarse)
-- 📊 **Procesar** solicitudes de clientes
-- ✅ **Validar** parámetros de entrada
-- 📤 **Devolver** resultados a los clientes
-- 🛡️ **Manejar** errores y excepciones
-
-## Herramientas Disponibles
-
-Este servidor expone las siguientes herramientas:
-
-### 🧮 Calculadora Básica
-- **`sumar(a, b)`** - Suma dos números
-- **`multiplicar(a, b)`** - Multiplica dos números
-- **`potencia(base, exponente)`** - Calcula la potencia de un número
-
-### 📝 Procesamiento de Texto
-- **`contar_palabras(texto)`** - Cuenta el número de palabras en un texto
-- **`a_mayusculas(texto)`** - Convierte texto a mayúsculas
-
-### 🕒 Utilidades
-- **`fecha_actual()`** - Obtiene la fecha y hora actual
-
-## Cómo Ejecutar el Ejercicio
+## 🚀 Cómo Ejecutar
 
 ### 1. Preparar el entorno
 
 ```bash
-# Asegúrate de estar en el directorio del ejercicio
+# Navegar al directorio del ejercicio
 cd ejercicio-2-servidor
 
 # Crear entorno virtual (si no existe)
 python3 -m venv venv
 source venv/bin/activate  # En Windows: venv\Scripts\activate
 
-# Instalar dependencias
+# Instalar dependencias (solo FastMCP)
 pip install -r requirements.txt
 ```
 
 ### 2. Ejecutar el servidor
 
 ```bash
-python servidor_mcp.py
+python servidor_basico.py
 ```
 
 ### 3. Salida esperada
 
 ```
-Servidor MCP Simple - Ejercicio 2
-Este ejercicio demuestra cómo crear un servidor MCP básico
-
-🧪 Demostración de herramientas del servidor
-==================================================
-
-🔧 Configurando herramientas del servidor...
-✅ Herramientas configuradas exitosamente
+🚀 Iniciando servidor MCP básico...
 📋 Herramientas disponibles:
-   • sumar(a, b) - Suma dos números
-   • multiplicar(a, b) - Multiplica dos números
-   • potencia(base, exponente) - Calcula potencia
-   • contar_palabras(texto) - Cuenta palabras en texto
-   • a_mayusculas(texto) - Convierte texto a mayúsculas
-   • fecha_actual() - Obtiene fecha y hora actual
-
-📋 Herramientas configuradas:
-✅ sumar(a, b) - Suma dos números
-✅ multiplicar(a, b) - Multiplica dos números
-✅ potencia(base, exponente) - Calcula potencia
-✅ contar_palabras(texto) - Cuenta palabras en texto
-✅ a_mayusculas(texto) - Convierte texto a mayúsculas
-✅ fecha_actual() - Obtiene fecha y hora actual
-
-💡 Para probar las herramientas:
-1. Ejecuta este servidor: python servidor_mcp.py
-2. En otra terminal, ejecuta el cliente del Ejercicio 1
-3. El cliente se conectará a este servidor y podrá usar las herramientas
-
-==================================================
-
-🚀 Iniciando servidor MCP...
-✅ Servidor MCP iniciado exitosamente en localhost:8000
-📡 Esperando conexiones de clientes...
-💡 Tip: Puedes usar el cliente del Ejercicio 1 para conectarte
-🛑 Presiona Ctrl+C para detener el servidor
+   • suma(a, b) - Suma dos números
+   • multiplicacion(a, b) - Multiplica dos números
+   • saludo(nombre) - Saludo personalizado
+🛑 Presiona Ctrl+C para detener
 ```
 
-## Explicación del Código
+## 📖 Explicación del Código
 
-### Estructura Principal
+El código es **extremadamente simple**:
 
-```python
-class ServidorMCPSimple:
-    def __init__(self, host, puerto)        # Inicialización
-    def configurar_herramientas(self)       # Registrar herramientas
-    async def iniciar(self)                 # Iniciar servidor
-    async def detener(self)                 # Detener servidor
-```
-
-### Decorador @fastmcp.tool()
-
-La clave para crear herramientas MCP está en el decorador `@self.fastmcp.tool()`:
+### Importación y Creación del Servidor
 
 ```python
-@self.fastmcp.tool()
-async def sumar(a: float, b: float) -> str:
-    """
-    Suma dos números.
-    
-    Args:
-        a: Primer número
-        b: Segundo número
-        
-    Returns:
-        String con el resultado de la suma
-    """
-    resultado = a + b
-    return f"El resultado de {a} + {b} = {resultado}"
+from fastmcp import FastMCP
+
+mcp = FastMCP(name="My First MCP Server")
 ```
 
 **Explicación:**
-- `@self.fastmcp.tool()`: Registra la función como una herramienta MCP
-- `async def`: Hace la función asíncrona (recomendado para MCP)
-- Tipos de parámetros: `float`, `str`, etc. (FastMCP los valida automáticamente)
+- `FastMCP`: La clase principal para crear servidores MCP
+- `name`: Nombre descriptivo del servidor (opcional pero recomendado)
+
+### Definir Herramientas
+
+```python
+@mcp.tool
+def suma(a: int, b: int) -> int:
+    """Devuelve la suma de dos números."""
+    return a + b
+```
+
+**Explicación:**
+- `@mcp.tool`: Decorador que registra la función como herramienta MCP
+- `a: int, b: int`: Parámetros con tipos específicos (FastMCP los valida automáticamente)
+- `-> int`: Tipo de retorno (opcional pero recomendado)
 - Docstring: Se convierte en la descripción de la herramienta
 
-### Herramienta con Manejo de Errores
+### Ejecutar el Servidor
 
 ```python
-@self.fastmcp.tool()
-async def potencia(base: float, exponente: float) -> str:
-    try:
-        resultado = math.pow(base, exponente)
-        return f"El resultado de {base}^{exponente} = {resultado}"
-    except OverflowError:
-        return f"Error: El resultado de {base}^{exponente} es demasiado grande"
-    except ValueError as e:
-        return f"Error: {str(e)}"
+if __name__ == "__main__":
+    mcp.run()
 ```
 
-**Conceptos importantes:**
-- Manejo de excepciones específicas (`OverflowError`, `ValueError`)
-- Mensajes de error informativos para el cliente
-- Logging para debugging del servidor
+**Explicación:**
+- `if __name__ == "__main__":` - Solo ejecuta si el archivo se llama directamente
+- `mcp.run()` - Inicia el servidor MCP (se ejecuta indefinidamente)
 
-### Herramienta Sin Parámetros
+## 🧪 Cómo Probar el Servidor
 
-```python
-@self.fastmcp.tool()
-async def fecha_actual() -> str:
-    """
-    Obtiene la fecha y hora actual.
-    
-    Returns:
-        String con la fecha y hora actual
-    """
-    ahora = datetime.now()
-    fecha_formateada = ahora.strftime("%Y-%m-%d %H:%M:%S")
-    return f"La fecha y hora actual es: {fecha_formateada}"
-```
+### Opción 1: Usar el Cliente del Ejercicio 1
 
-**Notas:**
-- Las herramientas pueden no tener parámetros
-- Siempre deben devolver algo (string, dict, etc.)
-- La documentación es importante para que los clientes sepan qué hace
-
-## Cómo Probar el Servidor
-
-### Método 1: Usar el Cliente del Ejercicio 1
-
-1. **Terminal 1** - Ejecutar el servidor:
+1. **Terminal 1** - Ejecutar este servidor básico:
    ```bash
    cd ejercicio-2-servidor
-   python servidor_mcp.py
+   python servidor_basico.py
    ```
 
-2. **Terminal 2** - Ejecutar el cliente:
+2. **Terminal 2** - Ejecutar el cliente del Ejercicio 1:
    ```bash
    cd ejercicio-1-cliente
    python cliente_mcp.py
    ```
 
-### Método 2: Testing Manual
-
-Puedes modificar el archivo `cliente_mcp.py` para probar herramientas específicas:
+### Opción 2: Testing Manual con Python
 
 ```python
-# En el método demostracion_cliente(), agregar:
-resultado_potencia = await cliente.ejecutar_herramienta("potencia", {"base": 2, "exponente": 3})
-if resultado_potencia:
-    print(f"   📊 Potencia: {resultado_potencia['content'][0]['text']}")
+# Crear un archivo test_servidor.py
+from servidor_basico import suma, multiplicacion, saludo
 
-resultado_palabras = await cliente.ejecutar_herramienta("contar_palabras", {"texto": "Hola mundo MCP"})
-if resultado_palabras:
-    print(f"   📊 Palabras: {resultado_palabras['content'][0]['text']}")
+# Probar las herramientas directamente
+print("🧮 Probando suma:", suma(5, 3))           # Resultado: 8
+print("✖️ Probando multiplicación:", multiplicacion(4, 7))  # Resultado: 28
+print("👋 Probando saludo:", saludo("María"))    # Resultado: ¡Hola María! Bienvenido al servidor MCP.
 ```
 
-## Conceptos Clave Aprendidos
+## 🎯 Conceptos Clave Aprendidos
 
-### 1. **Decoradores en FastMCP**
-- `@self.fastmcp.tool()`: Convierte funciones en herramientas MCP
-- Validación automática de tipos de parámetros
-- Documentación automática a partir de docstrings
+### 1. **Simplicidad de FastMCP**
+- Solo necesitas `FastMCP` y el decorador `@mcp.tool`
+- No necesitas configurar protocolos, validaciones o manejo de errores
+- FastMCP maneja todo automáticamente
 
-### 2. **Validación de Parámetros**
+### 2. **Decoradores en Python**
+- `@mcp.tool` convierte funciones normales en herramientas MCP
+- Los decoradores "envuelven" las funciones con funcionalidad adicional
+
+### 3. **Tipado en Python**
+- `a: int` especifica que el parámetro debe ser un entero
 - FastMCP valida automáticamente los tipos
-- Manejo de errores de validación
-- Parámetros opcionales y requeridos
+- Ayuda a detectar errores antes de la ejecución
 
-### 3. **Arquitectura de Servidor**
-- Separación entre configuración y ejecución
-- Manejo asíncrono de múltiples clientes
-- Logging para monitoreo y debugging
+### 4. **Documentación con Docstrings**
+- `"""Devuelve la suma de dos números."""` se convierte en la descripción
+- Los clientes MCP pueden ver esta información
+- Es una buena práctica de programación
 
-### 4. **Tipos de Herramientas**
-- Herramientas de cálculo (matemáticas)
-- Herramientas de procesamiento (texto)
-- Herramientas de utilidad (sistema)
-
-## Extensión del Servidor
+## 🔧 Personalización Fácil
 
 ### Agregar Nueva Herramienta
 
 ```python
-@self.fastmcp.tool()
-async def dividir(a: float, b: float) -> str:
-    """
-    Divide dos números.
-    
-    Args:
-        a: Dividendo
-        b: Divisor
-        
-    Returns:
-        String con el resultado de la división
-    """
-    if b == 0:
-        return "Error: No se puede dividir por cero"
-    
-    resultado = a / b
-    return f"El resultado de {a} ÷ {b} = {resultado}"
+@mcp.tool
+def resta(a: int, b: int) -> int:
+    """Devuelve la resta de dos números."""
+    return a - b
 ```
 
-### Agregar Validación Personalizada
+### Agregar Herramienta con String
 
 ```python
-@self.fastmcp.tool()
-async def raiz_cuadrada(numero: float) -> str:
-    """
-    Calcula la raíz cuadrada de un número.
-    
-    Args:
-        numero: Número para calcular raíz cuadrada
-        
-    Returns:
-        String con el resultado
-    """
-    if numero < 0:
-        return "Error: No se puede calcular la raíz cuadrada de un número negativo"
-    
-    resultado = math.sqrt(numero)
-    return f"La raíz cuadrada de {numero} = {resultado}"
+@mcp.tool
+def contar_caracteres(texto: str) -> int:
+    """Cuenta el número de caracteres en un texto."""
+    return len(texto)
 ```
 
-## Troubleshooting Común
+### Agregar Herramienta Sin Parámetros
+
+```python
+@mcp.tool
+def hora_actual() -> str:
+    """Devuelve la hora actual."""
+    from datetime import datetime
+    return datetime.now().strftime("%H:%M:%S")
+```
+
+## 🚨 Troubleshooting
 
 ### Error: "ModuleNotFoundError: No module named 'fastmcp'"
 
 **Solución:**
 ```bash
 pip install fastmcp
-# o
-pip install -r requirements.txt
 ```
 
-### Error: "Address already in use"
+### Error: "No se puede conectar al servidor"
 
-**Causa:** El puerto 8000 ya está siendo usado por otra aplicación.
+**Causa:** El servidor no está ejecutándose.
 
 **Solución:**
-```python
-# Cambiar el puerto en el código
-servidor = ServidorMCPSimple(puerto=8001)
-```
+1. Verifica que el servidor esté corriendo: `python servidor_basico.py`
+2. Verifica que no haya errores en la consola del servidor
+3. Asegúrate de que el puerto no esté ocupado
 
 ### Error: "Tool validation failed"
 
 **Causa:** Los parámetros enviados no coinciden con los tipos esperados.
 
-**Solución:** Verifica que el cliente envíe los tipos correctos (float, str, etc.).
+**Solución:** 
+- Para `suma(a: int, b: int)` envía números enteros, no strings
+- Para `saludo(nombre: str)` envía texto, no números
 
-## Próximos Pasos
+## 🎓 Próximos Pasos
 
-Ahora que entiendes cómo funciona un servidor MCP:
+Después de dominar este ejercicio básico:
 
-1. **Combina** el cliente y servidor para crear un sistema completo
-2. **Experimenta** agregando nuevas herramientas
-3. **Explora** recursos MCP (no solo herramientas)
-4. **Implementa** herramientas que se conecten a APIs externas
+1. **Ejecuta el Ejercicio 1** para aprender a crear un cliente MCP
+2. **Ejecuta el Ejercicio 2** para ver un servidor más complejo
+3. **Experimenta** agregando tus propias herramientas
+4. **Explora** la documentación oficial de FastMCP
 
-## Referencias
+## 💡 Consejos
 
-- [Documentación FastMCP](https://github.com/jlowin/fastmcp)
-- [Protocolo MCP](https://modelcontextprotocol.io/)
-- [Python AsyncIO](https://docs.python.org/3/library/asyncio.html)
+- **Empieza simple**: Agrega una herramienta a la vez
+- **Usa tipos**: Especifica tipos para parámetros y retornos
+- **Documenta**: Escribe docstrings descriptivos
+- **Prueba**: Verifica que cada herramienta funciona correctamente
 
 ---
 
-¡Felicitaciones! Has completado el Ejercicio 2. 🎉
+¡Este es el punto de partida perfecto para aprender MCP! 🎉
