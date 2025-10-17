@@ -43,7 +43,25 @@ Antes de comenzar con los ejercicios, asegúrate de tener:
 
 - **Python 3.8+** instalado
 - **pip** (gestor de paquetes de Python)
-- **Entorno virtual** configurado (recomendado)
+- **Entornos virtuales separados** para cada ejercicio (recomendado)
+
+### 📁 Estructura de Entornos
+
+Cada ejercicio tiene su propio entorno virtual independiente:
+
+```
+MCP/
+├── ejercicio-1-cliente/
+│   ├── venv/          # Entorno virtual del cliente
+│   ├── requirements.txt
+│   └── cliente_exitoso.py
+└── ejercicio-2-servidor/
+    ├── venv/          # Entorno virtual del servidor
+    ├── requirements.txt
+    └── servidor_basico.py
+```
+
+Esto permite que cada ejercicio tenga sus propias dependencias sin conflictos.
 
 ### 🚀 Configuración Rápida del Entorno
 
@@ -55,16 +73,20 @@ Antes de comenzar con los ejercicios, asegúrate de tener:
 
 **Opción 2: Configuración Manual**
 ```bash
-# 1. Crear y activar entorno virtual
+# 1. Crear y activar entorno virtual en cada ejercicio
+cd ejercicio-1-cliente
 python3 -m venv venv
 source venv/bin/activate  # En Windows: venv\Scripts\activate
+pip install -r requirements.txt
+deactivate
+cd ..
 
-# 2. Instalar dependencias generales
-pip install fastmcp
-
-# 3. Instalar dependencias de cada ejercicio
-cd ejercicio-1-cliente && pip install -r requirements.txt && cd ..
-cd ejercicio-2-servidor && pip install -r requirements.txt && cd ..
+cd ejercicio-2-servidor
+python3 -m venv venv
+source venv/bin/activate  # En Windows: venv\Scripts\activate
+pip install -r requirements.txt
+deactivate
+cd ..
 ```
 
 ### 📦 Configuración con pyproject.toml
@@ -87,8 +109,10 @@ pip install -e .
 # 1. Configurar entorno de desarrollo
 ./setup-desarrollo.sh
 
-# 2. Activar entorno virtual (cada vez que trabajes)
-source venv/bin/activate
+# 2. Activar entorno virtual del ejercicio que vayas a usar
+cd ejercicio-1-cliente && source venv/bin/activate
+# O para el servidor:
+# cd ejercicio-2-servidor && source venv/bin/activate
 ```
 
 ### 📚 Orden Recomendado de Aprendizaje
@@ -102,14 +126,15 @@ source venv/bin/activate
 ### 💡 Comandos Útiles para el Desarrollo
 
 ```bash
-# Activar entorno virtual (siempre antes de trabajar)
-source venv/bin/activate
+# Activar entorno virtual del cliente (siempre antes de trabajar)
+cd ejercicio-1-cliente && source venv/bin/activate
 
 # Ejecutar cliente MCP (ejercicio más simple)
-cd ejercicio-1-cliente && python cliente_mcp.py
+python cliente_exitoso.py
 
-# Ejecutar servidor MCP básico
-cd ejercicio-2-servidor && python servidor_basico.py
+# Para trabajar con el servidor, en otra terminal:
+cd ejercicio-2-servidor && source venv/bin/activate
+python servidor_basico.py
 
 # Verificar instalación
 python -c "import fastmcp; print('FastMCP instalado correctamente')"
@@ -142,14 +167,16 @@ graph LR
 ## Troubleshooting Común
 
 ### Error de Conexión
-- Verifica que el servidor esté ejecutándose
-- Confirma que la URL y puerto sean correctos
-- Revisa los logs del servidor para errores
+- Verifica que el servidor esté ejecutándose: `cd ejercicio-2-servidor && python servidor_basico.py`
+- El cliente se conecta via stdio (subprocess), no HTTP
+- Revisa que ambos ejercicios tengan sus entornos virtuales activados
+- Asegúrate de que FastMCP esté instalado en ambos entornos
 
 ### Error de Dependencias
-- Asegúrate de tener el entorno virtual activado
-- Ejecuta `pip install -r requirements.txt` en cada ejercicio
+- Asegúrate de tener el entorno virtual activado en cada ejercicio
+- Ejecuta `pip install -r requirements.txt` en cada directorio de ejercicio
 - Verifica la versión de Python (3.8+)
+- Cada ejercicio tiene su propio entorno virtual independiente
 
 ### Error de Permisos
 - En sistemas Unix, verifica permisos de ejecución
