@@ -36,5 +36,6 @@ if __name__ == "__main__":
     print("   • suma(a, b) - Suma dos números")
     print("   • multiplicacion(a, b) - Multiplica dos números") 
     print("   • saludo(nombre) - Saludo personalizado")
+    print("💡 Servidor MCP ejecutándose en modo stdio")
     print("🛑 Presiona Ctrl+C para detener")
     mcp.run()

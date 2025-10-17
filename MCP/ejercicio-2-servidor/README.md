@@ -97,7 +97,7 @@ if __name__ == "__main__":
 2. **Terminal 2** - Ejecutar el cliente del Ejercicio 1:
    ```bash
    cd ejercicio-1-cliente
-   python cliente_mcp.py
+   python cliente_exitoso.py
    ```
 
 ### Opción 2: Testing Manual con Python
@@ -161,6 +161,17 @@ def hora_actual() -> str:
     """Devuelve la hora actual."""
     from datetime import datetime
     return datetime.now().strftime("%H:%M:%S")
+```
+
+## ⚠️ Problema Identificado
+
+**Error común**: `TypeError: FastMCP.run_stdio_async() got an unexpected keyword argument 'host'`
+
+**Causa**: FastMCP usa el protocolo MCP con stdio, no HTTP. No acepta parámetros como `host` y `port`.
+
+**Solución**: Usa `servidor_simple.py` que funciona correctamente:
+```bash
+python servidor_simple.py
 ```
 
 ## 🚨 Troubleshooting

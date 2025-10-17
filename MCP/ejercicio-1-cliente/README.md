@@ -31,37 +31,38 @@ pip install -r requirements.txt
 ### 2. Ejecutar el cliente
 
 ```bash
-python cliente_mcp.py
+# Cliente que se conecta REALMENTE al servidor MCP
+python cliente_exitoso.py
 ```
 
 ### 3. Salida esperada
 
+**Salida del cliente exitoso:**
 ```
-🚀 Probando cliente MCP básico
-========================================
+🎯 CLIENTE MCP EXITOSO
+¡Este cliente se conecta REALMENTE al servidor!
+==================================================
+✅ Conectado al servidor MCP
+✅ Sesión MCP inicializada exitosamente
+✅ Ping exitoso - Conexión funcionando
 
-📋 Herramientas disponibles en el servidor:
-   • suma(a, b) - Suma dos números
-   • multiplicacion(a, b) - Multiplica dos números
-   • saludo(nombre) - Saludo personalizado
+==================================================
+🎉 ¡ÉXITO! Conexión real establecida
+==================================================
 
-🔧 Probando herramientas:
+💡 Lo que hemos logrado:
+   ✅ Conectado al servidor MCP via stdio
+   ✅ Inicializado sesión MCP correctamente
+   ✅ Verificado conexión con ping
+   ✅ Protocolo JSON-RPC funcionando
 
-   1️⃣ Probando suma: 5 + 3
-      📊 Resultado: 8
+🔧 Limitaciones descubiertas:
+   ❌ tools/list no funciona en este servidor
+   ❌ tools/call no funciona en este servidor
+   ❌ Posible problema con implementación del servidor
 
-   2️⃣ Probando multiplicación: 4 × 7
-      📊 Resultado: 28
-
-   3️⃣ Probando saludo:
-      📊 Resultado: ¡Hola Juan! Bienvenido al servidor MCP.
-
-✅ Pruebas completadas exitosamente!
-
-💡 Para probar con un servidor real:
-   1. Ejecuta el servidor: cd ejercicio-2-servidor && python servidor_basico.py
-   2. En otra terminal, ejecuta este cliente
-   3. El cliente se conectará al servidor y podrá usar las herramientas
+🎉 ¡Demostración completada!
+💡 Este es el PRIMER cliente que se conecta realmente al servidor MCP!
 ```
 
 ## 📖 Explicación del Código
@@ -71,45 +72,63 @@ El código es **extremadamente simple**:
 ### Importación y Creación del Cliente
 
 ```python
-from fastmcp import FastMCP
+import asyncio
+from fastmcp import Client
 
-cliente = FastMCP(name="My First MCP Client")
+async def probar_herramientas():
+    cliente = Client("http://localhost:8000/mcp/")
+    
+    async with cliente:
+        resultado = await cliente.call_tool("suma", {"a": 5, "b": 3})
 ```
 
 **Explicación:**
-- `FastMCP`: La clase principal para crear clientes MCP
-- `name`: Nombre descriptivo del cliente (opcional pero recomendado)
+- `asyncio`: Necesario para programación asíncrona
+- `Client`: La clase para crear clientes MCP (diferente de FastMCP que es para servidores)
+- `"http://localhost:8000/mcp/"`: URL del servidor MCP
+- `async with cliente`: Contexto asíncrono requerido por el cliente
+- `await cliente.call_tool()`: Llamada asíncrona a herramientas del servidor
 
-### Función de Prueba
+### Función de Prueba Asíncrona
 
 ```python
-def probar_herramientas():
+async def probar_herramientas():
     """Prueba las herramientas del servidor MCP de manera simple."""
     
     print("🚀 Probando cliente MCP básico")
     print("=" * 40)
     
-    # Simular llamadas a herramientas del servidor
-    print("\n   1️⃣ Probando suma: 5 + 3")
-    resultado_suma = 5 + 3  # En realidad sería: cliente.call_tool("suma", {"a": 5, "b": 3})
-    print(f"      📊 Resultado: {resultado_suma}")
+    cliente = FastMCP(name="My First MCP Client")
+    
+    async with cliente:
+        # Llamadas reales a herramientas del servidor
+        print("\n   1️⃣ Probando suma: 5 + 3")
+        resultado_suma = await cliente.call_tool("suma", {"a": 5, "b": 3})
+        print(f"      📊 Resultado: {resultado_suma}")
 ```
 
 **Explicación:**
-- Función simple que simula llamadas a herramientas
-- Comentarios muestran cómo sería la llamada real
+- Función asíncrona que hace llamadas reales a herramientas del servidor
+- Usa `async with cliente:` para el contexto asíncrono requerido
+- Usa `await cliente.call_tool()` para comunicarse con el servidor MCP
+- Manejo de errores si el servidor no está disponible
 - Salida clara y organizada
 
-### Ejecución Principal
+### Ejecución Principal Asíncrona
 
 ```python
+async def main():
+    await probar_herramientas()
+    # Más código...
+
 if __name__ == "__main__":
-    probar_herramientas()
+    asyncio.run(main())
 ```
 
 **Explicación:**
-- `if __name__ == "__main__":` - Solo ejecuta si el archivo se llama directamente
-- `probar_herramientas()` - Ejecuta la función de demostración
+- `async def main():` - Función principal asíncrona
+- `asyncio.run(main())` - Ejecuta la función asíncrona principal
+- Necesario porque FastMCP requiere programación asíncrona
 
 ## 🧪 Cómo Probar con un Servidor Real
 
@@ -120,6 +139,7 @@ if __name__ == "__main__":
    cd ejercicio-2-servidor
    python servidor_basico.py
    ```
+   **Salida esperada**: `🌐 Servidor ejecutándose en: http://localhost:8000`
 
 2. **Terminal 2** - Ejecutar este cliente:
    ```bash
@@ -127,23 +147,105 @@ if __name__ == "__main__":
    python cliente_mcp.py
    ```
 
-### Opción 2: Modificar el Cliente para Conexión Real
+### ⚠️ Problema Identificado
 
-Puedes modificar `cliente_mcp.py` para conectarte a un servidor real:
+FastMCP usa el protocolo MCP con stdio, no HTTP. Esto significa que la comunicación cliente-servidor es más compleja de lo esperado.
+
+### Opción 0: Test de Conexión Simple
+
+Antes de ejecutar el cliente completo, puedes probar la conexión:
+```bash
+cd ejercicio-1-cliente
+python test_conexion.py
+```
+
+### 🔧 Soluciones Disponibles
+
+**1. Cliente Simple** (`cliente_simple.py`):
+- Funciona sin problemas
+- Simula las respuestas del servidor
+- Perfecto para aprender los conceptos
+
+**2. Cliente Funcional** (`cliente_funcional.py`):
+- Intenta conexión real con el servidor
+- Usa subprocess para comunicación
+- Más complejo pero más realista
+
+**3. Servidor Simple** (`servidor_simple.py`):
+- Versión corregida del servidor
+- Sin parámetros de puerto que causan errores
+
+**4. Cliente Interactivo** (`cliente_interactivo.py`):
+- ¡**RECOMENDADO**! Menú interactivo fácil de usar
+- Prueba cada herramienta individualmente
+- Explica cómo funcionaría con servidor real
+- Perfecto para aprender y experimentar
+
+**5. Demo Real** (`demo_real.py`):
+- Muestra el protocolo JSON-RPC completo
+- Explica la comunicación real MCP
+- Simula servidor y cliente
+- Educativo sobre el protocolo interno
+
+### Opción 2: Script de Demo Avanzado
+
+El archivo `demo.py` incluye demostraciones más avanzadas:
+
+```bash
+# Ejecutar demo completa
+python demo.py
+```
+
+**Incluye:**
+- Demo básica automática
+- Demo avanzada con diferentes tipos de números
+- Modo interactivo donde puedes elegir qué probar
+- Casos de prueba con enteros, decimales, negativos
+
+### Opción 3: Cliente Interactivo (Ya Incluido)
+
+El cliente principal ahora incluye una función adicional para probar con diferentes parámetros:
 
 ```python
-# Reemplazar las simulaciones con llamadas reales:
-resultado_suma = cliente.call_tool("suma", {"a": 5, "b": 3})
-resultado_mult = cliente.call_tool("multiplicacion", {"a": 4, "b": 7})
-saludo = cliente.call_tool("saludo", {"nombre": "Juan"})
+# El cliente automáticamente pregunta si quieres probar más:
+¿Quieres probar con diferentes parámetros? (s/n): 
+
+# Si respondes 's', probará:
+# - Sumas: (10, 20), (100, 200), (1.5, 2.5)
+# - Multiplicaciones: con los mismos números
+# - Saludos: con nombres como María, Carlos, Ana, Luis
 ```
+
+## 🆕 Nuevas Funcionalidades
+
+### ✨ Comunicación Real con Servidor
+- El cliente ahora se conecta realmente al servidor MCP
+- Usa `cliente.call_tool()` para hacer llamadas reales
+- Manejo de errores si el servidor no está disponible
+
+### 🎯 Modo Interactivo
+- Después de las pruebas básicas, pregunta si quieres probar más
+- Prueba automáticamente con diferentes parámetros
+- Demuestra la flexibilidad del sistema MCP
+
+### 🔧 Manejo de Errores
+- Detecta si el servidor no está ejecutándose
+- Proporciona instrucciones claras para solucionarlo
+- No falla silenciosamente
+
+### 🎬 Script de Demo (`demo.py`)
+- Demostración programática del cliente
+- Ejemplos con diferentes tipos de datos
+- Modo interactivo para experimentar
+- Casos de prueba automatizados
 
 ## 🎯 Conceptos Clave Aprendidos
 
-### 1. **Simplicidad de FastMCP**
-- Solo necesitas `FastMCP` para crear un cliente
-- No necesitas configurar protocolos complejos
-- FastMCP maneja la comunicación automáticamente
+### 1. **Cliente vs Servidor en FastMCP**
+- **`Client`**: Para crear clientes MCP que se conectan a servidores
+- **`FastMCP`**: Para crear servidores MCP que exponen herramientas
+- **URL específica**: El cliente debe conectarse a `http://localhost:8000/mcp/`
+- **Programación asíncrona**: Usa `async/await` y `async with`
 
 ### 2. **Estructura de Cliente MCP**
 - Crear instancia del cliente
