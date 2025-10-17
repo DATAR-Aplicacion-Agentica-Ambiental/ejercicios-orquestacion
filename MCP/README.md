@@ -2,6 +2,14 @@
 
 Este directorio contiene ejercicios prácticos para aprender a trabajar con el **Model Context Protocol (MCP)** usando la librería **fastMCP**.
 
+## ✨ Características Destacadas
+
+- 🚀 **Súper Simples**: Cada ejercicio tiene solo 20 líneas de código
+- 📦 **Una Sola Dependencia**: Solo necesitas FastMCP
+- 🎯 **Perfecto para Principiantes**: Sin complejidades innecesarias
+- 📚 **Documentación Completa**: Explicaciones línea por línea
+- 🔧 **Listos para Usar**: Scripts de configuración automática
+
 ## ¿Qué es MCP?
 
 El **Model Context Protocol** es un protocolo estándar que permite a los modelos de IA acceder a herramientas, recursos y capacidades externas de manera segura y estructurada. MCP facilita la integración entre modelos de lenguaje y servicios externos.
@@ -16,11 +24,15 @@ El **Model Context Protocol** es un protocolo estándar que permite a los modelo
 
 ## Estructura de Ejercicios
 
+### 🎯 Enfoque: Máxima Simplicidad
+
+Estos ejercicios están diseñados para ser **extremadamente simples**. Cada uno tiene solo **20 líneas de código efectivo** y **una sola dependencia** (FastMCP). Perfectos para principiantes.
+
 ### 📁 ejercicio-1-cliente/
-**Cliente MCP básico** - Aprende a crear un cliente que se conecta a un servidor MCP y realiza peticiones simples.
+**Cliente MCP básico** - El ejemplo MÁS SIMPLE posible. Solo 20 líneas de código para aprender a consumir servicios MCP.
 
 ### 📁 ejercicio-2-servidor/
-**Servidor MCP básico** - Aprende a crear un servidor MCP que expone herramientas simples.
+**Servidor MCP básico** - El ejemplo MÁS SIMPLE posible. Solo 3 herramientas y 20 líneas de código.
 
 ### 📁 diagramas/
 Diagramas conceptuales que explican la arquitectura y flujo de comunicación MCP.
@@ -83,8 +95,8 @@ source venv/bin/activate
 
 1. 📖 **Lee** `README.md` (este archivo) - conceptos básicos
 2. 🔧 **Configura** el entorno con `./setup-desarrollo.sh`
-3. 🎯 **Ejecuta** `ejercicio-1-cliente/` - aprende a consumir servicios MCP
-4. 🔧 **Ejecuta** `ejercicio-2-servidor/` - aprende a crear servicios MCP
+3. 🎯 **Ejecuta** `ejercicio-1-cliente/` - ¡El MÁS SIMPLE! Solo 20 líneas para consumir servicios MCP
+4. 🔧 **Ejecuta** `ejercicio-2-servidor/` - ¡El MÁS SIMPLE! Solo 20 líneas para crear servicios MCP
 5. 📊 **Revisa** `diagramas/` para profundizar en la arquitectura
 
 ### 💡 Comandos Útiles para el Desarrollo
@@ -93,11 +105,11 @@ source venv/bin/activate
 # Activar entorno virtual (siempre antes de trabajar)
 source venv/bin/activate
 
-# Ejecutar cliente MCP
+# Ejecutar cliente MCP (ejercicio más simple)
 cd ejercicio-1-cliente && python cliente_mcp.py
 
-# Ejecutar servidor MCP (en otra terminal)
-cd ejercicio-2-servidor && python servidor_mcp.py
+# Ejecutar servidor MCP básico
+cd ejercicio-2-servidor && python servidor_basico.py
 
 # Verificar instalación
 python -c "import fastmcp; print('FastMCP instalado correctamente')"
