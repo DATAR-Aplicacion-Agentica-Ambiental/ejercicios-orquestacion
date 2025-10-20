@@ -30,7 +30,7 @@ pip install "mcp[cli]"
 ### Ejecuta las herramientas de desarrollo de MCP
 
 ```bash
-uv run mcp
+uv run python main.py
 ```
 
 Se puede instalar este servidor en  [Claude Desktop](https://claude.ai/download) apara interactuar:
