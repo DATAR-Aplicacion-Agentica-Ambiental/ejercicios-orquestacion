@@ -1,0 +1,16 @@
+[project]
+name = "mcp-server-inaturalist"
+version = "0.1.0"
+description = "Servidor MCP para consultar datos de biodiversidad de iNaturalist en Colombia"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "mcp[cli]>=1.18.0",
+    "httpx>=0.25.0",
+]
+
+[project.scripts]
+mcp-server-inaturalist = "main:main"
+
+[dependency-groups]
+dev = []
