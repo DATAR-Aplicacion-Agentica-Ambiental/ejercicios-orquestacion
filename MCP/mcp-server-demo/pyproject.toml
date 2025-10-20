@@ -1,9 +1,15 @@
 [project]
 name = "mcp-server-demo"
 version = "0.1.0"
-description = "Add your description here"
+description = "Servidor MCP básico de Hola Mundo con FastMCP"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "mcp[cli]>=1.18.0",
 ]
+
+[project.scripts]
+mcp-server-demo = "main:main"
+
+[dependency-groups]
+dev = []

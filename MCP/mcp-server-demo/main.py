@@ -1,6 +1,6 @@
-def main():
-    print("Hello from mcp-server-demo!")
-
+import sys
+from server import mcp
 
 if __name__ == "__main__":
-    main()
+    """Ejecuta el servidor MCP usando stdio"""
+    mcp.run()
