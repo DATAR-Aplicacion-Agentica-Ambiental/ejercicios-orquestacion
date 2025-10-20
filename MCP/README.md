@@ -43,3 +43,10 @@ También se puede correr el MCP Inspector:
 
 ```bash
 uv run mcp dev server.py
+
+
+Luego de actualizar dependecias se debe actualizar:
+
+```Bash
+uv sync
+```
