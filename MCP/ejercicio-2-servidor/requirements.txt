@@ -1,5 +1,0 @@
-# Dependencias mínimas para el Servidor MCP Básico
-# ================================================
-
-# FastMCP - Framework principal (única dependencia necesaria)
-fastmcp>=0.1.0
