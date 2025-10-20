@@ -6,7 +6,7 @@ Una aplicación simple que demuestra la integración de Reflex (frontend) con Go
 
 ### 1. Dirígete al directorio REFLEX
 ```bash
-cd REFLEX
+cd Reflex
 ```
 
 ### 2. Crea un entorno virtual
