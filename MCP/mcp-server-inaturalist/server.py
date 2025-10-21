@@ -2,29 +2,36 @@ from mcp.server.fastmcp import FastMCP
 import httpx
 from typing import Optional, List, Dict
 
-mcp = FastMCP("iNaturalist Colombia")
+mcp = FastMCP("iNaturalist")
 
 BASE_URL = "https://api.inaturalist.org/v1"
 
 @mcp.tool()
 async def buscar_observaciones(
     taxon_name: Optional[str] = None,
-    place_id: int = 7562,  # Colombia por defecto
+    lat: float = 4.8155,  # Humedal la Conejera - Bogotá
+    lng: float = -74.0750,
+    radius: float = 3.0,  # Radio en km
     per_page: int = 10,
     order_by: str = "created_at"
 ) -> dict:
     """
-    Busca observaciones en iNaturalist Colombia.
+    Busca observaciones en iNaturalist usando coordenadas geográficas.
+    Por defecto busca en Humedal la Conejera, Bogotá.
     
     Args:
         taxon_name: Nombre del taxón (especie, género, familia, etc.)
-        place_id: ID del lugar (7562 es Colombia)
+        lat: Latitud (default: 4.8155 - Humedal la Conejera)
+        lng: Longitud (default: -74.0750 - Humedal la Conejera)
+        radius: Radio de búsqueda en km (default: 3)
         per_page: Número de resultados (máx 200)
         order_by: Ordenar por 'created_at', 'observed_on', 'species_guess', 'votes'
     """
     try:
         params = {
-            "place_id": place_id,
+            "lat": lat,
+            "lng": lng,
+            "radius": radius,
             "per_page": min(per_page, 200),
             "order_by": order_by
         }
@@ -55,6 +62,7 @@ async def buscar_observaciones(
             
             return {
                 "total": data.get("total_results"),
+                "coordenadas": {"lat": lat, "lng": lng, "radius_km": radius},
                 "observaciones": observaciones
             }
             
@@ -121,19 +129,27 @@ async def buscar_especies(
 
 
 @mcp.tool()
-async def obtener_lugares_colombia(
-    nombre_lugar: Optional[str] = None
+async def obtener_lugares(
+    nombre_lugar: Optional[str] = None,
+    lat: float = 4.8155,  # Humedal la Conejera - Bogotá
+    lng: float = -74.0750,
+    radius: float = 5.0
 ) -> dict:
     """
-    Obtiene información sobre lugares/departamentos en Colombia.
+    Obtiene información sobre lugares cercanos a las coordenadas especificadas.
+    Por defecto busca alrededor de Humedal la Conejera.
     
     Args:
         nombre_lugar: Nombre del departamento o lugar a buscar
+        lat: Latitud (default: 4.8155 - Humedal la Conejera)
+        lng: Longitud (default: -74.0750 - Humedal la Conejera)
+        radius: Radio de búsqueda en km (default: 5)
     """
     try:
-        # Buscar dentro de Colombia (place_id = 7562)
         params = {
-            "place_id": 7562
+            "lat": lat,
+            "lng": lng,
+            "radius": radius
         }
         
         if nombre_lugar:
@@ -159,6 +175,7 @@ async def obtener_lugares_colombia(
             
             return {
                 "total": data.get("total_results"),
+                "coordenadas": {"lat": lat, "lng": lng, "radius_km": radius},
                 "lugares": lugares
             }
             
@@ -167,24 +184,29 @@ async def obtener_lugares_colombia(
 
 
 @mcp.tool()
-async def estadisticas_biodiversidad_colombia() -> dict:
+async def estadisticas_biodiversidad(
+    lat: float = 4.8155,  # Humedal la Conejera - Bogotá
+    lng: float = -74.0750,
+    radius: float = 3.0
+) -> dict:
     """
-    Obtiene estadísticas generales de biodiversidad en Colombia.
+    Obtiene estadísticas de biodiversidad en el área especificada.
+    Por defecto usa Humedal la Conejera.
     """
     try:
         async with httpx.AsyncClient(timeout=30.0) as client:
-            # Obtener observaciones en Colombia
+            # Obtener observaciones en el área
             response = await client.get(
                 f"{BASE_URL}/observations",
-                params={"place_id": 7562, "per_page": 0}
+                params={"lat": lat, "lng": lng, "radius": radius, "per_page": 0}
             )
             response.raise_for_status()
             data = response.json()
             
-            # Obtener especies en Colombia
+            # Obtener especies en el área
             response_especies = await client.get(
                 f"{BASE_URL}/taxa",
-                params={"place_id": 7562, "per_page": 0}
+                params={"lat": lat, "lng": lng, "radius": radius, "per_page": 0}
             )
             response_especies.raise_for_status()
             data_especies = response_especies.json()
@@ -192,7 +214,8 @@ async def estadisticas_biodiversidad_colombia() -> dict:
             return {
                 "total_observaciones": data.get("total_results"),
                 "total_especies": data_especies.get("total_results"),
-                "pais": "Colombia"
+                "ubicacion": "Humedal la Conejera, Bogotá",
+                "coordenadas": {"lat": lat, "lng": lng, "radius_km": radius}
             }
             
     except Exception as e:
@@ -202,15 +225,20 @@ async def estadisticas_biodiversidad_colombia() -> dict:
 @mcp.tool()
 async def observaciones_por_usuario(
     username: str,
-    place_id: int = 7562,
+    lat: float = 4.8155,  # Humedal la Conejera - Bogotá
+    lng: float = -74.0750,
+    radius: float = 3.0,
     per_page: int = 10
 ) -> dict:
     """
-    Busca observaciones de un usuario específico en Colombia.
+    Busca observaciones de un usuario específico en el área especificada.
+    Por defecto busca en Humedal la Conejera.
     
     Args:
         username: Nombre de usuario en iNaturalist
-        place_id: ID del lugar (7562 es Colombia)
+        lat: Latitud (default: 4.8155 - Humedal la Conejera)
+        lng: Longitud (default: -74.0750 - Humedal la Conejera)
+        radius: Radio de búsqueda en km (default: 3)
         per_page: Número de resultados
     """
     try:
@@ -219,7 +247,9 @@ async def observaciones_por_usuario(
                 f"{BASE_URL}/observations",
                 params={
                     "user_login": username,
-                    "place_id": place_id,
+                    "lat": lat,
+                    "lng": lng,
+                    "radius": radius,
                     "per_page": per_page
                 }
             )
@@ -238,6 +268,7 @@ async def observaciones_por_usuario(
             
             return {
                 "usuario": username,
+                "coordenadas": {"lat": lat, "lng": lng, "radius_km": radius},
                 "total_observaciones": data.get("total_results"),
                 "observaciones": observaciones
             }
