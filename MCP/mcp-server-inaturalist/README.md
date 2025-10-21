@@ -50,7 +50,7 @@ Busca información sobre especies y taxones en iNaturalist.
 **Ejemplo:**
 ```json
 {
-  "nombre": "Jaguar",
+  "nombre": "Cuervillo cara pelada",
   "rank": "species",
   "lat": 4.8155,
   "lng": -74.0750,
