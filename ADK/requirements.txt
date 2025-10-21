@@ -1,17 +1,27 @@
 # Dependencias para el sistema de agentes y la API
 
 # Google ADK y Gemini
-google-adk>=0.1.0
-google-genai>=0.1.0
+google-adk
+google-genai
+google-generativeai
 
 # FastAPI y servidor
-fastapi>=0.109.0
-uvicorn[standard]>=0.27.0
-pydantic>=2.5.0
+fastapi
+uvicorn
+pydantic
 
 # Utilidades
-requests>=2.31.0
-python-dotenv>=1.0.0
+requests
+python-dotenv
 
-# Opcional pero recomendado
-httpx>=0.26.0
+# Dependencias para el Sistema de Agentes con MCP
+# API y servidor web
+httpx
+
+# MCP (Model Context Protocol)
+mcp
+
+# Opcional: para development
+# pytest
+# black
+# ruff

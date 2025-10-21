@@ -1,8 +1,3 @@
-"""
-Sistema de Agentes Multi-Especializados para Expediciones
-Versión Local - Integra consultas de clima, cálculos y biodiversidad
-"""
-
 import asyncio
 import logging
 import os
