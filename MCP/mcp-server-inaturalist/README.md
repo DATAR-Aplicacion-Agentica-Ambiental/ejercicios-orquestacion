@@ -43,16 +43,22 @@ Busca información sobre especies y taxones en iNaturalist.
 - `nombre` (str, requerido): Nombre común o científico de la especie
 - `rank` (opcional): Rango taxonómico (species, genus, family, order, class, phylum, kingdom)
 - `is_active` (bool, default=True): Solo taxones activos (no sinónimos)
+- `lat` (float, default=4.8155): Latitud (Humedal la Conejera por defecto)
+- `lng` (float, default=-74.0750): Longitud (Humedal la Conejera por defecto)
+- `radius` (float, default=3.0): Radio de búsqueda en km
 
 **Ejemplo:**
 ```json
 {
   "nombre": "Jaguar",
-  "rank": "species"
+  "rank": "species",
+  "lat": 4.8155,
+  "lng": -74.0750,
+  "radius": 3.0
 }
 ```
 
-**Retorna:** Lista de especies con ID, nombre científico, nombre común, rango, URL de Wikipedia, total de observaciones, foto y estado de conservación.
+**Retorna:** Lista de especies con ID, nombre científico, nombre común, rango, URL de Wikipedia, total de observaciones, foto y estado de conservación, más las coordenadas usadas en la búsqueda.
 
 ---
 

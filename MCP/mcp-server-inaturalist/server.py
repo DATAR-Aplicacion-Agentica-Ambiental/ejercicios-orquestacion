@@ -78,21 +78,31 @@ async def buscar_observaciones(
 async def buscar_especies(
     nombre: str,
     rank: Optional[str] = None,
-    is_active: bool = True
+    is_active: bool = True,
+    lat: float = 4.8155,  # Humedal la Conejera - Bogotá
+    lng: float = -74.0750,
+    radius: float = 3.0
 ) -> dict:
     """
-    Busca información sobre especies/taxones.
+    Busca información sobre especies/taxones en el área especificada.
+    Por defecto busca en Humedal la Conejera.
     
     Args:
         nombre: Nombre común o científico de la especie
         rank: Rango taxonómico (species, genus, family, order, class, phylum, kingdom)
         is_active: Solo taxones activos (no sinónimos)
+        lat: Latitud (default: 4.8155 - Humedal la Conejera)
+        lng: Longitud (default: -74.0750 - Humedal la Conejera)
+        radius: Radio de búsqueda en km (default: 3)
     """
     try:
         params = {
             "q": nombre,
             "is_active": is_active,
-            "locale": "es"
+            "locale": "es",
+            "lat": lat,
+            "lng": lng,
+            "radius": radius
         }
         
         if rank:
@@ -108,6 +118,9 @@ async def buscar_especies(
             
             especies = []
             for taxon in data.get("results", []):
+                default_photo = taxon.get("default_photo")
+                conservation_status = taxon.get("conservation_status")
+                
                 especies.append({
                     "id": taxon.get("id"),
                     "nombre_cientifico": taxon.get("name"),
@@ -115,12 +128,13 @@ async def buscar_especies(
                     "rango": taxon.get("rank"),
                     "wikipedia_url": taxon.get("wikipedia_url"),
                     "observaciones_totales": taxon.get("observations_count"),
-                    "foto_url": taxon.get("default_photo", {}).get("medium_url"),
-                    "estado_conservacion": taxon.get("conservation_status", {}).get("status")
+                    "foto_url": default_photo.get("medium_url") if default_photo else None,
+                    "estado_conservacion": conservation_status.get("status") if conservation_status else None
                 })
             
             return {
                 "total": data.get("total_results"),
+                "coordenadas": {"lat": lat, "lng": lng, "radius_km": radius},
                 "especies": especies
             }
             
