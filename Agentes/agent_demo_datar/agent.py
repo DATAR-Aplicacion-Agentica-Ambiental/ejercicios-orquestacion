@@ -18,7 +18,7 @@ root_agent = Agent(
                     args=[
                         "run",
                         "--directory",
-                        "/Users/manglerojo/Desarollo/DATAR/ejercicios-orquestacion/MCP/mcp-server-inaturalist",
+                        "/path/to/your/folder/ejercicios-orquestacion/MCP/mcp-server-inaturalist",
                         "python",
                         "-m",
                         "main"
