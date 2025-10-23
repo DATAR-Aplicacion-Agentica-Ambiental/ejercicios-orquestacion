@@ -1,77 +1,103 @@
-# Explicación del Contenido de la Carpeta
+# Explicación Pedagógica del Proyecto: Asistente de Expediciones con IA
 
-Esta carpeta contiene un sistema de agentes multi-especializados para la planificación de expediciones. El sistema utiliza el Agent Development Kit (ADK) de Google y el modelo Gemini para coordinar a varios agentes especializados que proporcionan información sobre el clima, la logística y la biodiversidad.
+¡Bienvenido al proyecto de Asistente de Expediciones! Esta guía te llevará paso a paso a través de la arquitectura, los componentes y el funcionamiento de este sistema de inteligencia artificial.
 
-## Componentes Principales
+## 1. ¿Qué es este proyecto?
 
-A continuación se describen los archivos más importantes de la carpeta:
+Imagina que estás planeando una expedición a un parque natural. Necesitas saber el clima, calcular el peso de tu equipo y conocer qué animales y plantas podrías encontrar. Este proyecto es un **asistente virtual** que hace todo eso por ti.
 
-*   **`sistema_agentes.py`**: Este es el script principal que define y orquesta a los agentes. Crea un agente coordinador que delega las tareas a tres agentes especializados:
-    *   **Meteorólogo:** Proporciona información meteorológica utilizando la API de `wttr.in`.
-    *   **Matemático:** Realiza cálculos logísticos, como el peso total del equipaje.
-    *   **Biólogo:** Ofrece datos sobre la biodiversidad del lugar de la expedición, utilizando una API local de iNaturalist.
+Utiliza un equipo de **agentes de IA especializados** (como un meteorólogo, un matemático y un biólogo) que colaboran para darte una respuesta completa. El sistema está construido con el **Agent Development Kit (ADK) de Google** y el modelo de lenguaje **Gemini**.
 
-*   **`api_inaturalist.py`**: Es una API REST construida con FastAPI que sirve como intermediario para obtener datos de iNaturalist. Actualmente, está configurada para obtener observaciones del Humedal La Conejera en Bogotá.
+## 2. La Arquitectura: Un Equipo de Especialistas
 
-*   **`servidor_mcp.py`**: Este script implementa un servidor de Model Context Protocol (MCP) que permite realizar consultas más avanzadas a la API de iNaturalist. Esto incluye la búsqueda de especies, la obtención de estadísticas y el filtrado de observaciones.
+El sistema funciona como un equipo de expertos coordinado por un jefe de proyecto.
 
-*   **`sistema_agentes_con_mcp.py`**: Una versión mejorada del sistema de agentes que integra el cliente MCP para comunicarse con `servidor_mcp.py` y realizar consultas de biodiversidad más complejas.
+### El Coordinador (El Jefe de Equipo)
 
-*   **`test_integracion_mcp.py`**: Un script de pruebas para verificar la correcta integración y funcionamiento del servidor MCP.
+- **Archivo:** `sistema_agentes.py`, `sistema_agentes_con_mcp.py`
+- **Función:** Es el cerebro de la operación. Cuando haces una pregunta (ej: "Planeo una expedición a la selva"), el coordinador la analiza y decide qué especialistas necesita. No responde directamente, sino que delega las tareas.
 
-*   **`requirements.txt`**: Este archivo lista todas las dependencias de Python necesarias para ejecutar el proyecto.
+### Los Especialistas (Los Miembros del Equipo)
 
-*   **Archivos de Documentación (`.md`)**:
-    *   **`README.md`**: Proporciona una introducción general al proyecto, sus características y cómo utilizarlo.
-    *   **`ARQUITECTURA de MCP.md`**: Ofrece una descripción detallada de la arquitectura del sistema, con diagramas de flujo y explicaciones sobre las decisiones de diseño.
-    *   **`README de la implementación MCP.md`**: Se centra en la integración de MCP, explicando sus ventajas y cómo utilizar las nuevas funcionalidades.
+1.  **Agente Meteorólogo:**
+    - **Tarea:** Dar el pronóstico del tiempo.
+    - **Herramienta:** Se conecta a la API pública `wttr.in` para obtener datos del clima en tiempo real.
+    - **Personalidad:** Habla como un teólogo medieval, ¡dando un toque divertido!
 
-## Arquitectura
+2.  **Agente Matemático:**
+    - **Tarea:** Realizar cálculos logísticos.
+    - **Herramientas:** Funciones para sumar pesos, calcular distancias, etc.
+    - **Personalidad:** Es muy técnico y preciso.
 
-El sistema sigue un patrón de coordinador, donde un agente principal recibe las consultas del usuario y las descompone en tareas más pequeñas que son asignadas a los agentes especializados.
+3.  **Agente Biólogo (El más avanzado):**
+    - **Tarea:** Informar sobre la biodiversidad.
+    - **Herramientas:** Este agente tiene dos formas de obtener datos de la plataforma **iNaturalist**:
+        1.  **API REST (Rápida y Simple):** Para consultas sencillas como "¿Qué hay en el Humedal La Conejera?". Utiliza el servidor `api_inaturalist.py`.
+        2.  **Servidor MCP (Potente y Avanzado):** Para preguntas complejas como "Busca información sobre el 'Oso de Anteojos' en toda Colombia". Utiliza el `servidor_mcp.py`.
 
-Para la consulta de datos de biodiversidad, se utilizan dos enfoques:
+![Arquitectura](https://i.imgur.com/9k8y2yD.png)
 
-1.  **API REST (`api_inaturalist.py`)**: Para consultas rápidas y sencillas sobre un lugar específico.
-2.  **Servidor MCP (`servidor_mcp.py`)**: Para consultas más complejas y avanzadas que requieren una mayor flexibilidad y capacidad de búsqueda.
+### ¿Por qué dos sistemas para el biólogo?
 
-Esta arquitectura dual permite un equilibrio entre la velocidad y la potencia de las consultas.
+Esta arquitectura dual es una decisión clave:
 
-## Uso
+- La **API REST** es como una llamada telefónica rápida: ideal para una pregunta específica y veloz.
+- El **Servidor MCP** (Model Context Protocol) es como enviar un investigador a una biblioteca: tarda un poco más, pero puede realizar búsquedas profundas y complejas.
 
-Para ejecutar el sistema, sigue estos pasos:
+Esto le da al sistema un balance perfecto entre **velocidad y potencia**.
 
-1.  **Instalar las dependencias:**
+## 3. Descripción de los Archivos del Proyecto
+
+Aquí tienes un mapa de los archivos más importantes:
+
+- 📜 **`README.md` y otros `.md`:**
+  - Tu punto de partida. Contienen la documentación general, diagramas de arquitectura (`ARQUITECTURA de MCP.md`) y guías de uso.
+
+- 🐍 **Scripts Principales (`.py`):**
+  - **`sistema_agentes.py`:** La versión original del sistema que orquesta a los agentes y usa la API REST para el biólogo.
+  - **`sistema_agentes_con_mcp.py`:** La versión **mejorada** que le da al biólogo acceso al potente servidor MCP.
+  - **`agente_biologo_activo.py`:** Un script para "chatear" directamente con el agente biólogo y probar sus capacidades avanzadas.
+
+- 📡 **Servidores:**
+  - **`api_inaturalist.py`:** Un pequeño servidor web (hecho con FastAPI) que responde a las consultas simples de biodiversidad. Es una puerta de enlace a iNaturalist.
+  - **`servidor_mcp.py`:** El servidor avanzado que expone herramientas complejas (búsqueda de especies, estadísticas, etc.) a través del protocolo MCP.
+
+- 🧪 **Pruebas:**
+  - **`test_integracion_mcp.py`:** Un script fundamental para verificar que el servidor MCP funciona correctamente antes de ejecutar todo el sistema.
+
+- ⚙️ **Configuración:**
+  - **`requirements.txt`:** La lista de "ingredientes" (librerías de Python) que necesitas instalar.
+  - **`.env`:** Un archivo (que debes crear) para guardar tu clave de API de Google de forma segura.
+
+## 4. ¿Cómo Ponerlo en Marcha? (Guía Rápida)
+
+Sigue estos pasos para ver la magia en acción:
+
+1.  **Instala las dependencias:**
     ```bash
     pip install -r requirements.txt
     ```
 
-2.  **Configurar la API Key de Google:**
-    Crea un archivo `.env` en la raíz del proyecto y añade tu clave de API de Google:
-    ```
-    GOOGLE_API_KEY="tu_api_key_aqui"
-    ```
+2.  **Configura tu API Key:**
+    - Crea un archivo llamado `.env`.
+    - Dentro, escribe: `GOOGLE_API_KEY="tu_clave_secreta_de_google"`
 
-3.  **Iniciar los servidores:**
-    *   Para la funcionalidad básica, inicia la API de iNaturalist:
-        ```bash
-        python api_inaturalist.py
-        ```
-    *   Para la funcionalidad avanzada con MCP, inicia el servidor MCP:
-        ```bash
-        python servidor_mcp.py
-        ```
+3.  **Ejecuta la versión que prefieras:**
 
-4.  **Ejecutar el sistema de agentes:**
-    *   Para la versión básica:
-        ```bash
-        python sistema_agentes.py
-        ```
-    *   Para la versión con MCP:
-        ```bash
-        python sistema_agentes_con_mcp.py
-        ```
+    - **Opción A: Sistema Básico (con API REST)**
+      1.  En una terminal, inicia el servidor simple: `python api_inaturalist.py`
+      2.  En otra terminal, ejecuta el sistema: `python sistema_agentes.py`
 
-## Personalización
+    - **Opción B: Sistema Avanzado (con MCP)**
+      1.  En una terminal, inicia el servidor avanzado: `python servidor_mcp.py`
+      2.  En otra terminal, ejecuta el sistema mejorado: `python sistema_agentes_con_mcp.py`
 
-El sistema está diseñado para ser extensible. Puedes añadir nuevos agentes, herramientas o funcionalidades modificando los scripts principales. La documentación en los archivos `.md` proporciona una guía detallada sobre cómo realizar estas personalizaciones.
+## 5. Personalización y Futuro
+
+Este proyecto es un punto de partida. Aquí tienes algunas ideas para extenderlo:
+
+- **Añadir un nuevo agente:** ¿Qué tal un "Agente Geólogo" que informe sobre tipos de terreno?
+- **Crear nuevas herramientas:** Podrías añadir una herramienta al matemático para calcular raciones de comida.
+- **Mejorar las personalidades:** ¡Haz que los agentes sean aún más únicos!
+
+Esperamos que esta explicación te haya sido de gran utilidad para entender a fondo el proyecto. ¡Ahora estás listo para explorar, experimentar y expandir sus capacidades!
